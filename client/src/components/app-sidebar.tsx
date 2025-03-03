@@ -1,123 +1,107 @@
-import { useQuery } from "@tanstack/react-query";
-import info from "@/lib/info.json";
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
-import { apiClient } from "@/lib/api";
-import { NavLink, useLocation } from "react-router";
-import type { UUID } from "@elizaos/core";
-import { Book, Cog, User } from "lucide-react";
-import ConnectionStatus from "./connection-status";
+import { NavLink } from "react-router";
+import { Book, Cog, Menu } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function AppSidebar() {
-    const location = useLocation();
-    const query = useQuery({
-        queryKey: ["agents"],
-        queryFn: () => apiClient.getAgents(),
-        refetchInterval: 5_000,
-    });
-
-    const agents = query?.data?.agents;
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <Sidebar>
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <NavLink to="/">
-                                <img
-                                    alt="elizaos-icon"
-                                    src="/elizaos-icon.png"
-                                    width="100%"
-                                    height="100%"
-                                    className="size-7"
-                                />
+        <>
+            {/* Mobile Menu Button */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="fixed top-4 left-4 z-50 p-2 rounded-md bg-background border md:hidden"
+            >
+                <Menu size={24} />
+            </button>
 
-                                <div className="flex flex-col gap-0.5 leading-none">
-                                    <span className="font-semibold">
-                                        ElizaOS
-                                    </span>
-                                    <span className="">v{info?.version}</span>
-                                </div>
-                            </NavLink>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Agents</SidebarGroupLabel>
-                    <SidebarGroupContent>
+            <aside className={cn(
+                "fixed md:sticky top-0 left-0",
+                "h-screen w-[280px]",
+                "bg-background border-r",
+                "transition-all duration-300",
+                "flex flex-col",
+                "md:translate-x-0",
+                "md:opacity-100",
+                isOpen
+                    ? "translate-x-0 opacity-100 z-50"
+                    : "-translate-x-full opacity-0 -z-10",
+            )}>
+                <Sidebar className="flex flex-col flex-1 h-full">
+                    <SidebarHeader className="flex-none">
                         <SidebarMenu>
-                            {query?.isPending ? (
-                                <div>
-                                    {Array.from({ length: 5 }).map(
-                                        (_, _index) => (
-                                            <SidebarMenuItem key={"skeleton-item"}>
-                                                <SidebarMenuSkeleton />
-                                            </SidebarMenuItem>
-                                        )
-                                    )}
-                                </div>
-                            ) : (
-                                <div>
-                                    {agents?.map(
-                                        (agent: { id: UUID; name: string }) => (
-                                            <SidebarMenuItem key={agent.id}>
-                                                <NavLink
-                                                    to={`/chat/${agent.id}`}
-                                                >
-                                                    <SidebarMenuButton
-                                                        isActive={location.pathname.includes(
-                                                            agent.id
-                                                        )}
-                                                    >
-                                                        <User />
-                                                        <span>
-                                                            {agent.name}
-                                                        </span>
-                                                    </SidebarMenuButton>
-                                                </NavLink>
-                                            </SidebarMenuItem>
-                                        )
-                                    )}
-                                </div>
-                            )}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton size="lg" asChild>
+                                    <NavLink to="/" onClick={() => setIsOpen(false)}>
+                                        <img
+                                            alt="grantolf-icon"
+                                            src="/grantolf.png"
+                                            width="100%"
+                                            height="100%"
+                                            className="size-7"
+                                        />
+                                        <div className="flex flex-col gap-0.5 leading-none">
+                                            <span className="font-semibold">
+                                                Grantolf
+                                            </span>
+                                            <span className="">Chat with the Grant Wizard</span>
+                                        </div>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-            <SidebarFooter>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <NavLink
-                            to="https://elizaos.github.io/eliza/docs/intro/"
-                            target="_blank"
-                        >
-                            <SidebarMenuButton>
-                                <Book /> Documentation
-                            </SidebarMenuButton>
-                        </NavLink>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton disabled>
-                            <Cog /> Settings
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <ConnectionStatus />
-                </SidebarMenu>
-            </SidebarFooter>
-        </Sidebar>
+                    </SidebarHeader>
+                    <SidebarContent className="flex-1">
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <NavLink
+                                    to="https://grantolf"
+                                    target="_blank"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <SidebarMenuButton>
+                                        <Book /> Grantolf Main Site
+                                    </SidebarMenuButton>
+                                </NavLink>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <NavLink
+                                    to="https://app.uniswap.org/swap?chain=polygon&inputCurrency=0x7ceb23fd6bc0add59e62ac25578270cff1b9f619&outputCurrency=0xdb7a2607b71134d0b09c27ca2d77b495e4dbeedb&value=.01&field=input"
+                                    target="_blank"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <SidebarMenuButton>
+                                        <Cog /> BUY $GRANTS on Polygon
+                                    </SidebarMenuButton>
+                                </NavLink>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarContent>
+                    <SidebarFooter className="flex-none">
+                        <SidebarMenu>
+                            {/* Removed ConnectionStatus component */}
+                        </SidebarMenu>
+                    </SidebarFooter>
+                </Sidebar>
+            </aside>
+
+            {/* Backdrop */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 md:hidden z-40"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+        </>
     );
 }

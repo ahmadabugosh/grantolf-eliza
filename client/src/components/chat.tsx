@@ -36,7 +36,7 @@ type AnimatedDivProps = AnimatedProps<{ style: React.CSSProperties }> & {
     children?: React.ReactNode;
 };
 
-export default function Page({ agentId }: { agentId: UUID }) {
+export default function Chat({ agentId }: { agentId: UUID }) {
     const { toast } = useToast();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [input, setInput] = useState("");
@@ -52,7 +52,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const { scrollRef, isAtBottom, scrollToBottom, disableAutoScroll } = useAutoScroll({
         smooth: true,
     });
-   
+
     useEffect(() => {
         scrollToBottom();
     }, [queryClient.getQueryData(["messages", agentId])]);
@@ -171,9 +171,9 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const CustomAnimatedDiv = animated.div as React.FC<AnimatedDivProps>;
 
     return (
-        <div className="flex flex-col w-full h-[calc(100dvh)] p-4">
+        <div className="flex flex-col h-full w-full px-0">
             <div className="flex-1 overflow-y-auto">
-                <ChatMessageList 
+                <ChatMessageList
                     scrollRef={scrollRef}
                     isAtBottom={isAtBottom}
                     scrollToBottom={scrollToBottom}
@@ -197,7 +197,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
                                 >
                                     {message?.user !== "user" ? (
                                         <Avatar className="size-8 p-1 border rounded-full select-none">
-                                            <AvatarImage src="/elizaos-icon.png" />
+                                            <AvatarImage src="/grantolf.png" />
                                         </Avatar>
                                     ) : null}
                                     <div className="flex flex-col">

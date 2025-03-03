@@ -5,8 +5,6 @@ import { AppSidebar } from "./components/app-sidebar";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Toaster } from "./components/ui/toaster";
 import { BrowserRouter, Route, Routes } from "react-router";
-import Chat from "./routes/chat";
-import Overview from "./routes/overview";
 import Home from "./routes/home";
 import useVersion from "./hooks/use-version";
 
@@ -23,7 +21,7 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <div
-                className="dark antialiased"
+                className="dark antialiased h-screen flex flex-col"
                 style={{
                     colorScheme: "dark",
                 }}
@@ -31,22 +29,21 @@ function App() {
                 <BrowserRouter>
                     <TooltipProvider delayDuration={0}>
                         <SidebarProvider>
-                            <AppSidebar />
-                            <SidebarInset>
-                                <div className="flex flex-1 flex-col gap-4 size-full container">
-                                    <Routes>
-                                        <Route path="/" element={<Home />} />
-                                        <Route
-                                            path="chat/:agentId"
-                                            element={<Chat />}
-                                        />
-                                        <Route
-                                            path="settings/:agentId"
-                                            element={<Overview />}
-                                        />
-                                    </Routes>
-                                </div>
-                            </SidebarInset>
+                            <div className="flex flex-1">
+                                <AppSidebar />
+                                <main className="flex-1 flex flex-col w-full">
+                                    <SidebarInset
+                                        className="flex-1 !m-0 !ml-0 !rounded-none !shadow-none"
+                                        variant="default"
+                                    >
+                                        <div className="h-full w-full">
+                                            <Routes>
+                                                <Route path="*" element={<Home />} />
+                                            </Routes>
+                                        </div>
+                                    </SidebarInset>
+                                </main>
+                            </div>
                         </SidebarProvider>
                         <Toaster />
                     </TooltipProvider>
