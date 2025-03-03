@@ -77,3 +77,9 @@ EXPOSE 3000 5173
 
 # Command to start the application
 CMD ["sh", "-c", "pnpm start & pnpm start:client"]
+
+# Make npm/pnpm more resilient to network issues
+ENV npm_config_fetch_retries=5
+ENV npm_config_fetch_retry_factor=2
+ENV npm_config_fetch_retry_mintimeout=20000
+ENV npm_config_fetch_retry_maxtimeout=120000
