@@ -46,6 +46,7 @@ jobs:
               if ! docker compose build eliza; then
                 echo "Failed to build new image"
                 UPDATE_SUCCESS=false
+                exit 1  # Exit with failure specifically when build fails
               fi
             fi
             
@@ -54,6 +55,8 @@ jobs:
               echo "Build successful, updating running container..."
               docker compose rm -fs eliza
               docker compose up -d eliza
+              echo "Update completed successfully."
             else
               echo "Update failed. Keeping current container running."
+              exit 1  # Exit with failure for any other failures
             fi

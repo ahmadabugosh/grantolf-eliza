@@ -40,6 +40,9 @@ COPY . .
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
 
+# Fix esbuild permissions - ensure the binary is executable
+RUN chmod +x /app/client/node_modules/@esbuild/linux-x64/bin/esbuild
+
 # Build the project
 RUN pnpm run build && pnpm prune --prod
 
