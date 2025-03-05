@@ -1,0 +1,24 @@
+name: update-agent
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Agent
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -e
+            cd $HOME/grantolf-eliza
+            git reset --hard origin/main
+            git pull origin main
+            docker compose rm -fs eliza
+            docker compose up -d --build
