@@ -17,6 +17,7 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 60m
           script: |
+            docker system prune -f
             # We'll track if we successfully updated
             UPDATE_SUCCESS=true
             
