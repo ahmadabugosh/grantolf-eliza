@@ -60,3 +60,4 @@ jobs:
               echo "Update failed. Keeping current container running."
               exit 1  # Exit with failure for any other failures
             fi
+            docker system prune -f
