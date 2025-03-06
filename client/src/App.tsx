@@ -34,7 +34,6 @@ function App() {
                                 <main className="flex-1 flex flex-col w-full">
                                     <SidebarInset
                                         className="flex-1 !m-0 !ml-0 !rounded-none !shadow-none"
-                                        variant="default"
                                     >
                                         <div className="h-full w-full">
                                             <Routes>

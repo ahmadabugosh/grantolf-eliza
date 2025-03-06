@@ -40,6 +40,9 @@ COPY . .
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
 
+# Fix esbuild permissions - ensure the binary is executable
+RUN chmod +x /app/client/node_modules/@esbuild/linux-x64/bin/esbuild
+
 # Build the project
 RUN pnpm run build && pnpm prune --prod
 
@@ -77,3 +80,9 @@ EXPOSE 3000 5173
 
 # Command to start the application
 CMD ["sh", "-c", "pnpm start & pnpm start:client"]
+
+# Make npm/pnpm more resilient to network issues
+ENV npm_config_fetch_retries=5
+ENV npm_config_fetch_retry_factor=2
+ENV npm_config_fetch_retry_mintimeout=20000
+ENV npm_config_fetch_retry_maxtimeout=120000

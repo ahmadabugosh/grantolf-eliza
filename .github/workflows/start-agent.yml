@@ -1,0 +1,21 @@
+name: start-agent
+
+on:
+  workflow_dispatch:
+
+jobs:
+  start:
+    name: Start
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Agent
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -e
+            cd $HOME/grantolf-eliza
+            docker compose up -d

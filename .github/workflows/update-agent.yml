@@ -1,0 +1,63 @@
+name: update-agent
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Agent
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          command_timeout: 200m
+          script: |
+            docker system prune -f
+            # We'll track if we successfully updated
+            UPDATE_SUCCESS=true
+            
+            # Change directory
+            cd $HOME/grantolf-eliza || { echo "Failed to change directory"; UPDATE_SUCCESS=false; }
+            
+            # Only proceed if previous step succeeded
+            if [ "$UPDATE_SUCCESS" = true ]; then
+              if ! git reset --hard origin/main; then
+                echo "Failed to reset git repository"
+                UPDATE_SUCCESS=false
+              fi
+            fi
+            
+            # Only proceed if previous steps succeeded
+            if [ "$UPDATE_SUCCESS" = true ]; then
+              if ! git pull origin main; then
+                echo "Failed to pull latest changes"
+                UPDATE_SUCCESS=false
+              fi
+            fi
+            
+            # Try to build the new image without affecting the running container
+            if [ "$UPDATE_SUCCESS" = true ]; then
+              echo "Building new image..."
+              if ! docker compose build eliza; then
+                echo "Failed to build new image"
+                UPDATE_SUCCESS=false
+                exit 1  # Exit with failure specifically when build fails
+              fi
+            fi
+            
+            # Only remove and restart container if all previous steps (including build) succeeded
+            if [ "$UPDATE_SUCCESS" = true ]; then
+              echo "Build successful, updating running container..."
+              docker compose rm -fs eliza
+              docker compose up -d eliza
+              echo "Update completed successfully."
+            else
+              echo "Update failed. Keeping current container running."
+              exit 1  # Exit with failure for any other failures
+            fi
+            docker system prune -f
