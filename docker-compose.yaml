@@ -32,6 +32,7 @@ services:
             - OPENROUTER_MODEL=${OPENROUTER_MODEL:-}
             - ELEVENLABS_MODEL_ID=${ELEVENLABS_MODEL_ID:-}
             - ELEVENLABS_VOICE_ID=${ELEVENLABS_VOICE_ID:-}
+            - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
             # Refer to: https://github.com/elizaOS/eliza/blob/develop/.env.example for all available environment variables
         env_file:
             - .env
