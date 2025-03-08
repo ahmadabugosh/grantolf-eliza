@@ -18,4 +18,4 @@ jobs:
           script: |
             set -e
             cd $HOME/grantolf-eliza
-            docker compose up -d
+            pm2 start grantolf

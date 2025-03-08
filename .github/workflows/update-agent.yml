@@ -17,13 +17,13 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 200m
           script: |
-            docker system prune -f
+
             # We'll track if we successfully updated
             UPDATE_SUCCESS=true
             
             # Change directory
-            cd $HOME/grantolf-eliza || { echo "Failed to change directory"; UPDATE_SUCCESS=false; }
-            
+            cd $HOME/grantolf-eliza
+            chmod +x ./client/node_modules/@esbuild/linux-x64/bin/esbuild
             # Only proceed if previous step succeeded
             if [ "$UPDATE_SUCCESS" = true ]; then
               if ! git reset --hard origin/main; then
@@ -40,24 +40,26 @@ jobs:
               fi
             fi
             
+            pm2 stop grantolf
+            pm2 delete grantolf
+
             # Try to build the new image without affecting the running container
             if [ "$UPDATE_SUCCESS" = true ]; then
               echo "Building new image..."
-              if ! docker compose build eliza; then
+              if ! pnpm i && pnpm build; then
                 echo "Failed to build new image"
                 UPDATE_SUCCESS=false
                 exit 1  # Exit with failure specifically when build fails
               fi
             fi
             
-            # Only remove and restart container if all previous steps (including build) succeeded
+            # Only remove and restart grantolf if all previous steps (including build) succeeded
             if [ "$UPDATE_SUCCESS" = true ]; then
-              echo "Build successful, updating running container..."
-              docker compose rm -fs eliza
-              docker compose up -d eliza
+              echo "Build successful, updating running grantolf..."
+              pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
               echo "Update completed successfully."
             else
-              echo "Update failed. Keeping current container running."
+              echo "Update failed. Keeping current grantolf running."
               exit 1  # Exit with failure for any other failures
             fi
             docker system prune -f
