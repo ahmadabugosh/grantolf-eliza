@@ -1,7 +1,7 @@
 services:
     eliza:
         container_name: grantolf
-        command: ["pnpm", "start", "--character=./characters/grantolf.character.json"]
+        #command: ["pnpm", "start", "--character=./characters/grantolf.character.json"]
         build:
             context: .
             dockerfile: Dockerfile

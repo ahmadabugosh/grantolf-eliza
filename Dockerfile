@@ -79,7 +79,7 @@ COPY --from=builder /app/characters ./characters
 EXPOSE 3000 5173
 
 # Command to start the application
-CMD ["sh", "-c", "pnpm start & pnpm start:client"]
+CMD ["sh", "-c", "pnpm start --character=./characters/grantolf.character.json"]
 
 # Make npm/pnpm more resilient to network issues
 ENV npm_config_fetch_retries=5
