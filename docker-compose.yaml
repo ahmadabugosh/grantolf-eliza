@@ -15,6 +15,8 @@ services:
             - /var/run/tappd.sock:/var/run/tappd.sock
             - ./eliza:/app/packages/client-twitter/src/tweetcache
             - ./eliza:/app/db.sqlite
+        networks:
+            - grantolf
         environment:
             - TWITTER_POLL_INTERVAL=${TWITTER_POLL_INTERVAL:-200}
             - TWITTER_TARGET_USERS=${TWITTER_TARGET_USERS:-}
@@ -36,3 +38,7 @@ services:
             # Refer to: https://github.com/elizaOS/eliza/blob/develop/.env.example for all available environment variables
         env_file:
             - .env
+
+networks:
+    grantolf:
+        driver: bridge
