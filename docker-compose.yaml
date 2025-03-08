@@ -17,27 +17,9 @@ services:
             - ./eliza:/app/db.sqlite
         networks:
             - grantolf
-        environment:
-            - TWITTER_POLL_INTERVAL=${TWITTER_POLL_INTERVAL:-200}
-            - TWITTER_TARGET_USERS=${TWITTER_TARGET_USERS:-}
-            - TWITTER_RETRY_LIMIT=${TWITTER_RETRY_LIMIT:-}
-            - TWITTER_SPACES_ENABLE=${TWITTER_SPACES_ENABLE:-}
-            - ENABLE_TWITTER_POST_GENERATION=${ENABLE_TWITTER_POST_GENERATION:-}
-            - POST_INTERVAL_MIN=${POST_INTERVAL_MIN:-}
-            - POST_INTERVAL_MAX=${POST_INTERVAL_MAX:-}
-            - TWITTER_DRY_RUN=${TWITTER_DRY_RUN:-}
-            - TWITTER_USERNAME=${TWITTER_USERNAME:-}
-            - TWITTER_PASSWORD=${TWITTER_PASSWORD:-}
-            - TWITTER_EMAIL=${TWITTER_EMAIL:-}
-            - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-            - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-            - OPENROUTER_MODEL=${OPENROUTER_MODEL:-}
-            - ELEVENLABS_MODEL_ID=${ELEVENLABS_MODEL_ID:-}
-            - ELEVENLABS_VOICE_ID=${ELEVENLABS_VOICE_ID:-}
-            - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
-            # Refer to: https://github.com/elizaOS/eliza/blob/develop/.env.example for all available environment variables
         env_file:
             - .env
+            # Refer to: https://github.com/elizaOS/eliza/blob/develop/.env.example for all available environment variables
 
 networks:
     grantolf:
