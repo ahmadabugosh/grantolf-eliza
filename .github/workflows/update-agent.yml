@@ -37,9 +37,9 @@ jobs:
             pm2 stop grantolf
             pm2 delete grantolf
             echo "Install dependencies"
-            pnpm install --no-frozen-lockfile
+            sudo spnpm install --no-frozen-lockfile
             echo "Build"
-            pnpm build
+            sudo pnpm build
             echo "Start grantolf"
             pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
             echo "Done"
