@@ -17,6 +17,7 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 200m
           script: |
+            nvm use v23.3.0
 
             #alias pm2=/home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2
             #alias pnpm=/home/gmadmin/.local/share/pnpm/pnpm
@@ -32,11 +33,11 @@ jobs:
             # Only proceed if previous steps succeeded
             git pull origin main
             
-            /home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2 stop grantolf
-            /home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2 delete grantolf
+            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 stop grantolf
+            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 delete grantolf
 
             # Try to build the new image without affecting the running container
             /home/gmadmin/.local/share/pnpm/pnpm i && /home/gmadmin/.local/share/pnpm/pnpm build
             
             # Only remove and restart grantolf if all previous steps (including build) succeeded
-            pm2 start /home/gmadmin/.local/share/pnpm/pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
+            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 start /home/gmadmin/.local/share/pnpm/pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
