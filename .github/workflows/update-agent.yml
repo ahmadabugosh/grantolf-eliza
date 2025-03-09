@@ -17,13 +17,12 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 200m
           script: |
-            nvm use v23.3.0
-
-            #alias pm2=/home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2
-            #alias pnpm=/home/gmadmin/.local/share/pnpm/pnpm
-            # We'll track if we successfully updated
-            UPDATE_SUCCESS=true
-            
+            echo "Check node version"
+            node -v
+            echo "Check pnpm version"
+            pnpm -v
+            echo "Check pm2 version"
+            pm2 -v
             # Change directory
             cd $HOME/grantolf-eliza
             chmod +x ./client/node_modules/@esbuild/linux-x64/bin/esbuild
@@ -33,11 +32,11 @@ jobs:
             # Only proceed if previous steps succeeded
             git pull origin main
             
-            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 stop grantolf
-            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 delete grantolf
+            /home/gmadmin/.local/share/pnpm/pm2 stop grantolf
+            /home/gmadmin/.local/share/pnpm/pm2 delete grantolf
 
             # Try to build the new image without affecting the running container
             /home/gmadmin/.local/share/pnpm/pnpm i && /home/gmadmin/.local/share/pnpm/pnpm build
             
             # Only remove and restart grantolf if all previous steps (including build) succeeded
-            /home/gmadmin/.nvm/versions/node/v23.3.0/bin/pm2 start /home/gmadmin/.local/share/pnpm/pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
+            /home/gmadmin/.local/share/pnpm/pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
