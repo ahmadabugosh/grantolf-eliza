@@ -23,20 +23,20 @@ jobs:
             pnpm -v
             echo "Check pm2 version"
             pm2 -v
-            # Change directory
+            echo "Change directory"
             cd $HOME/grantolf-eliza
             chmod +x ./client/node_modules/@esbuild/linux-x64/bin/esbuild
-            # Only proceed if previous step succeeded
+            echo "Reset to main"
             git reset --hard origin/main
-            
-            # Only proceed if previous steps succeeded
+            echo "Pull from main"
             git pull origin main
-            
+            echo "Stop grantolf"
             pm2 stop grantolf
             pm2 delete grantolf
-
-            # Try to build the new image without affecting the running container
-            pnpm install --no-frozen-lockfile && pnpm build
-            
-            # Only remove and restart grantolf if all previous steps (including build) succeeded
+            echo "Install dependencies"
+            pnpm install --no-frozen-lockfile
+            echo "Build"
+            pnpm build
+            echo "Start grantolf"
             pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
+            echo "Done"
