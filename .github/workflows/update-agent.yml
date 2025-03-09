@@ -46,7 +46,7 @@ jobs:
             # Try to build the new image without affecting the running container
             if [ "$UPDATE_SUCCESS" = true ]; then
               echo "Building new image..."
-              if ! npm i && npm run build; then
+              if ! pnpm i && pnpm build; then
                 echo "Failed to build new image"
                 UPDATE_SUCCESS=false
                 exit 1  # Exit with failure specifically when build fails
@@ -56,10 +56,9 @@ jobs:
             # Only remove and restart grantolf if all previous steps (including build) succeeded
             if [ "$UPDATE_SUCCESS" = true ]; then
               echo "Build successful, updating running grantolf..."
-              pm2 start npm --name "grantolf" -- start --character=./characters/grantolf.character.json
+              pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
               echo "Update completed successfully."
             else
               echo "Update failed. Keeping current grantolf running."
               exit 1  # Exit with failure for any other failures
             fi
-            docker system prune -f
