@@ -18,8 +18,8 @@ jobs:
           command_timeout: 200m
           script: |
 
-            alias pm2=$HOME/.nvm/versions/node/v23.9.0/bin/pm2
-            alias pnpm=$HOME/.local/share/pnpm/pnpm
+            #alias pm2=/home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2
+            #alias pnpm=/home/gmadmin/.local/share/pnpm/pnpm
             # We'll track if we successfully updated
             UPDATE_SUCCESS=true
             
@@ -27,40 +27,16 @@ jobs:
             cd $HOME/grantolf-eliza
             chmod +x ./client/node_modules/@esbuild/linux-x64/bin/esbuild
             # Only proceed if previous step succeeded
-            if [ "$UPDATE_SUCCESS" = true ]; then
-              if ! git reset --hard origin/main; then
-                echo "Failed to reset git repository"
-                UPDATE_SUCCESS=false
-              fi
-            fi
+            git reset --hard origin/main
             
             # Only proceed if previous steps succeeded
-            if [ "$UPDATE_SUCCESS" = true ]; then
-              if ! git pull origin main; then
-                echo "Failed to pull latest changes"
-                UPDATE_SUCCESS=false
-              fi
-            fi
+            git pull origin main
             
-            pm2 stop grantolf
-            pm2 delete grantolf
+            /home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2 stop grantolf
+            /home/gmadmin/.nvm/versions/node/v23.9.0/bin/pm2 delete grantolf
 
             # Try to build the new image without affecting the running container
-            if [ "$UPDATE_SUCCESS" = true ]; then
-              echo "Building new image..."
-              if ! pnpm i && pnpm build; then
-                echo "Failed to build new image"
-                UPDATE_SUCCESS=false
-                exit 1  # Exit with failure specifically when build fails
-              fi
-            fi
+            /home/gmadmin/.local/share/pnpm/pnpm i && /home/gmadmin/.local/share/pnpm/pnpm build
             
             # Only remove and restart grantolf if all previous steps (including build) succeeded
-            if [ "$UPDATE_SUCCESS" = true ]; then
-              echo "Build successful, updating running grantolf..."
-              pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
-              echo "Update completed successfully."
-            else
-              echo "Update failed. Keeping current grantolf running."
-              exit 1  # Exit with failure for any other failures
-            fi
+            pm2 start /home/gmadmin/.local/share/pnpm/pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
