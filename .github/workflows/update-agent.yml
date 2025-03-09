@@ -18,7 +18,7 @@ jobs:
           command_timeout: 200m
           script: |
             # Load environment variables
-            source ~/.bash_rc
+            source $HOME/.bash_rc
             echo "Check node version"
             node -v
             echo "Check pnpm version"
