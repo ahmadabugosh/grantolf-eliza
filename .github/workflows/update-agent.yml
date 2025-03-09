@@ -18,6 +18,8 @@ jobs:
           command_timeout: 200m
           script: |
 
+            alias pm2=$HOME/.nvm/versions/node/v23.9.0/bin/pm2
+            alias pnpm=$HOME/.local/share/pnpm/pnpm
             # We'll track if we successfully updated
             UPDATE_SUCCESS=true
             
