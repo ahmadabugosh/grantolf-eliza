@@ -17,6 +17,8 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 200m
           script: |
+            # Load environment variables
+            source ~/.bash_rc
             echo "Check node version"
             node -v
             echo "Check pnpm version"
