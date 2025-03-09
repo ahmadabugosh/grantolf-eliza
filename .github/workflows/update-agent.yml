@@ -32,11 +32,11 @@ jobs:
             # Only proceed if previous steps succeeded
             git pull origin main
             
-            /home/gmadmin/.local/share/pnpm/pm2 stop grantolf
-            /home/gmadmin/.local/share/pnpm/pm2 delete grantolf
+            pm2 stop grantolf
+            pm2 delete grantolf
 
             # Try to build the new image without affecting the running container
-            /home/gmadmin/.local/share/pnpm/pnpm i && /home/gmadmin/.local/share/pnpm/pnpm build
+            pnpm install --no-frozen-lockfile && pnpm build
             
             # Only remove and restart grantolf if all previous steps (including build) succeeded
-            /home/gmadmin/.local/share/pnpm/pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
+            pm2 start pnpm --name "grantolf" -- start --character=./characters/grantolf.character.json
